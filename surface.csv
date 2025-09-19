@@ -1,0 +1,9 @@
+# TOPAS Version: 4.0
+# Parameter File: ppd_ehp_volume.txt
+# Results for scorer: SurfaceScorer
+# Filtered by: OnlyIncludeParticlesOfGeneration = "Primary"
+# Scored on surface: SiDiode/ZPlusSurface
+# SurfaceTrackCount : Count_in_Bin   
+# Binned by incident track energy in 50 bins of 0.004 MeV from 0 MeV to 0.2 MeV
+# First bin is underflow, next to last bin is overflow, last bin is for case of no incident track.
+0, 15, 243, 440, 672, 861, 1034, 1254, 1421, 1619, 1850, 1936, 2184, 2408, 2609, 2856, 2890, 3103, 3404, 3559, 3673, 3829, 4162, 4354, 4516, 4628, 4739, 5098, 5233, 5421, 5571, 5625, 4263, 2848, 1435, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0

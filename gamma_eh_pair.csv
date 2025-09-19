@@ -1,0 +1,8 @@
+# TOPAS Version: 4.0
+# Parameter File: gamma_eh_pair.txt
+# Results for scorer: EScorer
+# Scored in component: DepletionDepth
+# EnergyDeposit ( MeV ) : Count_in_Bin   
+# Binned by energy deosited in step in 100 bins of 0.002 MeV from 0 MeV to 0.2 MeV
+# First bin is underflow, last bin is overflow.
+0, 7, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0

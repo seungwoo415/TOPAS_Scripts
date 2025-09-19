@@ -1,0 +1,9 @@
+# TOPAS Version: 4.0
+# Parameter File: ppd_ehp_volume.txt
+# Results for scorer: SecondaryScorer
+# Filtered by: OnlyIncludeParticlesOfGeneration = "Secondary"
+# Scored in component: SiDiode
+# EnergyDeposit ( MeV ) : Count_in_Bin   
+# Binned by incident track energy in 1 bins of 0.2 MeV from 0 MeV to 0.2 MeV
+# First bin is underflow, next to last bin is overflow, last bin is for case of no incident track.
+0, 8, 0, 0

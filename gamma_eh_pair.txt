@@ -1,0 +1,98 @@
+# This example demonstrates the three different ways one can bin results by energy. Adjust the value of EBinEnergy to see the effect.
+#
+# IncidentTrack means we bin based on the energy of the track that was initially
+# incident on the scoring volume, even though the track that finally delivers the
+# scored energy is likely to be not this track but one of its resultng delta rays.
+# This is the default setting.
+# It is set this way because the original use of energy binning was to study how
+# proton therapy dose due to various energy protons incident on the patient.
+#
+# PreStep means we bin based on the kinetic energy of the track at the time
+# that it deposited the dose.
+# This is generally used when one wants to score a spectrum.
+# So, for example, if you adjust Quantity below to Fluence, then the scored
+# value is what is referred to in the literature as a Spectral Fluence.
+#
+# DepositedInStep means we bin based on the energy that was deposited in the step.
+# You can use this setting to see that almost all actual energy deposits occur
+# in small amounts spread along the track.
+
+# World 
+s:Ge/World/Material  = "Air"
+d:Ge/World/HLX       = 50. cm
+d:Ge/World/HLY       = 50. cm
+d:Ge/World/HLZ       = 50. cm
+b:Ge/World/Invisible = "True"
+
+# Photodiode 500 um depth
+s:Ge/SiDiode/Type     = "TsBox"
+s:Ge/SiDiode/Parent   = "World"
+s:Ge/SiDiode/Material = "G4_Si"
+d:Ge/SiDiode/HLX      = 3. mm
+d:Ge/SiDiode/HLY      = 3. mm
+d:Ge/SiDiode/HLZ      = 250 um
+s:Ge/SiDiode/Color = "Blue" 
+
+# Depletion Region Detector only score 1.5 um of SiDiode
+s:Ge/DepletionDepth/Type     = "TsBox"
+s:Ge/DepletionDepth/Parent   = "SiDiode"
+s:Ge/DepletionDepth/Material = "G4_Si"
+d:Ge/DepletionDepth/HLX      = 3. mm
+d:Ge/DepletionDepth/HLY      = 3. mm
+d:Ge/DepletionDepth/HLZ      = 0.75 um
+d:Ge/DepletionDepth/TransZ = -0.24925 mm
+s:Ge/DepletionDepth/Color = "Red" 
+
+# E_dep Scorer
+s:Sc/EScorer/Component                 = "DepletionDepth" 
+s:Sc/EScorer/Quantity                 = "EnergyDeposit"
+b:Sc/EScorer/OutputToConsole           = "True"
+s:Sc/EScorer/OutputType = "csv"
+s:Sc/EScorer/OutputFile = "gamma_eh_pair"
+s:Sc/EScorer/IfOutputFileAlreadyExists = "Overwrite"
+sc:Sc/EScorer/EBinEnergy               = "DepositedInStep"
+#s:Sc/EScorer/OnlyIncludeParticlesOfGeneration = "Primary"
+i:Sc/EScorer/EBins        = 100             # Number of energy bins - just remove bins for total energy deposition
+d:Sc/EScorer/EBinMin      = 0 keV       # Minimum energy
+d:Sc/EScorer/EBinMax      = 200 keV       # Maximum energy
+sv:Sc/EScorer/Report      = 1 "Count_In_Bin" # counts num of particles  
+
+
+# IncidentTrack - what is the energy of the given incident energies (here it is only 500 keV) are incident to the Scorer
+# DepositedInStep - how much of the incident energy was deposited in each step (interaction)
+# The only difference is - maybe i need to change to primary generation 
+
+# there is a difference when "Primary" generation is on vs. off for DepositedInStep - looks like there are electrons
+# generated and then they're generating more photons? - can verify that e- are generated using statement below
+#sv:Sc/EnergyDepInLeadBox/OnlyIncludeParticlesNamed = 1 "gamma"
+
+# View 
+#s:Gr/ViewA/Type                            = "OpenGL"
+i:Gr/ViewA/WindowSizeX                      = 900
+i:Gr/ViewA/WindowSizeY                      = 900
+d:Gr/ViewA/Theta                            = 55 deg
+d:Gr/ViewA/Phi                              = 20 deg
+s:Gr/ViewA/Projection                       = "Perspective"
+d:Gr/ViewA/PerspectiveAngle                 = 30 deg
+u:Gr/ViewA/Zoom                             = 1
+b:Gr/ViewA/HiddenLineRemovalForTrajectories = "True"
+
+# PHYSICS LIST
+s:Ph/ListName         = "Gamma"
+s:Ph/Gamma/Type     = "Geant4_Modular"
+sv:Ph/Gamma/Modules = 1 "g4em-standard_opt3"
+
+# Source - Co-57 
+s:So/source/Type = "Isotropic" 
+s:So/source/Component = "BeamPosition"
+s:So/source/BeamParticle               = "gamma"
+s:So/source/Color = "Green" 
+s:So/source/BeamEnergySpectrumType    = "continuous"
+dv:So/source/BeamEnergySpectrumValues  = 2 122 136 keV # https://gammaray.inl.gov/SiteAssets/catalogs/ge/pdf/co57.pdf
+uv:So/source/BeamEnergySpectrumWeights = 2 0.89 0.11
+u:So/source/BeamEnergySpread           = 0 
+ic:So/source/NumberOfHistoriesInRun    = 1000000
+
+d:Ge/BeamPosition/TransZ= -2 cm
+
+#b:Ts/PauseBeforeQuit = "True"

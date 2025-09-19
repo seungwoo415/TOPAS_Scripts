@@ -1,0 +1,151 @@
+# World 
+s:Ge/World/Material  = "Air"
+d:Ge/World/HLX       = 100. cm
+d:Ge/World/HLY       = 100. cm
+d:Ge/World/HLZ       = 100. cm
+b:Ge/World/Invisible = "True"
+
+# Photodiode 
+s:Ge/SiDiode/Type     = "TsBox"
+s:Ge/SiDiode/Parent   = "World"
+s:Ge/SiDiode/Material = "G4_Si"
+d:Ge/SiDiode/HLX      = 50. cm
+d:Ge/SiDiode/HLY      = 50. cm
+d:Ge/SiDiode/HLZ      = 0.2 um
+s:Ge/SiDiode/Color = "Blue"
+
+# PrimaryScorer
+s:Sc/PrimaryScorer/Component                 = "SiDiode" 
+s:Sc/PrimaryScorer/Quantity                 = "EnergyDeposit"
+b:Sc/PrimaryScorer/OutputToConsole           = "True"
+s:Sc/PrimaryScorer/OutputType = "csv"
+s:Sc/PrimaryScorer/OutputFile = "de_primary"
+s:Sc/PrimaryScorer/IfOutputFileAlreadyExists = "Overwrite"
+sc:Sc/PrimaryScorer/EBinEnergy               = "IncidentTrack"
+s:Sc/PrimaryScorer/OnlyIncludeParticlesOfGeneration = "Primary"
+i:Sc/PrimaryScorer/EBins        = 100             # Number of energy bins - just remove bins for total energy deposition
+d:Sc/PrimaryScorer/EBinMin      = 0 keV       # Minimum energy
+d:Sc/PrimaryScorer/EBinMax      = 200 keV       # Maximum energy
+sv:Sc/PrimaryScorer/Report      = 1 "Count_In_Bin" # counts num of particles  
+
+
+# IncidentTrack - what is the energy of the given incident energies (here it is only 500 keV) are incident to the Scorer
+# DepositedInStep - how much of the incident energy was deposited in each step (interaction)
+# The only difference is - maybe i need to change to primary generation 
+
+# there is a difference when "Primary" generation is on vs. off for DepositedInStep - looks like there are electrons
+# generated and then they're generating more photons? - can verify that e- are generated using statement below
+#sv:Sc/EnergyDepInLeadBox/OnlyIncludeParticlesNamed = 1 "e-"
+
+# SurfaceScorer
+s:Sc/SurfaceScorer/Component                 = "SiDiode" 
+s:Sc/SurfaceScorer/Quantity                 = "SurfaceTrackCount"
+s:Sc/SurfaceScorer/Surface                          = "SiDiode/ZMinusSurface"
+b:Sc/SurfaceScorer/OutputToConsole           = "True"
+s:Sc/SurfaceScorer/OutputType = "csv"
+s:Sc/SurfaceScorer/OutputFile = "de_surface"
+s:Sc/SurfaceScorer/IfOutputFileAlreadyExists = "Overwrite"
+s:Sc/SurfaceScorer/OnlyIncludeParticlesOfGeneration = "Primary"
+i:Sc/SurfaceScorer/EBins        = 50              # Number of energy bins - just remove bins for total energy deposition
+d:Sc/SurfaceScorer/EBinMin      = 0 keV       # Minimum energy
+d:Sc/SurfaceScorer/EBinMax      = 200 keV       # Maximum energy
+sv:Sc/SurfaceScorer/Report      = 1 "Count_In_Bin" # counts num of particles
+
+# Scorer
+s:Sc/Phsp/Quantity                    = "PhaseSpace"
+b:Sc/Phsp/OutputToConsole             = "True"
+s:Sc/Phsp/Surface                     = "SiDiode/ZMinusSurface"
+s:Sc/Phsp/OutputType                  = "ASCII" # ASCII, Binary, Limited or ROOT
+s:Sc/Phsp/OutputFile                  = "de_phasespace"
+i:Sc/Phsp/OutputBufferSize            = 1000
+b:Sc/Phsp/IncludeTOPASTime = "True" # Time used by TimeFeatures for this history
+b:Sc/Phsp/IncludeTimeOfFlight = "True" # Time of Flight of this particle from start of history to scoring plane
+b:Sc/Phsp/IncludeRunID = "True"
+b:Sc/Phsp/IncludeEventID = "True"
+b:Sc/Phsp/IncludeTrackID = "True"
+b:Sc/Phsp/IncludeParentID = "True" # Track ID of parent particle
+b:Sc/Phsp/IncludeCharge = "True"
+b:Sc/Phsp/IncludeCreatorProcess = "True"
+b:Sc/Phsp/IncludeVertexInfo = "True" # Initial KE, Position and Momentum
+b:Sc/Phsp/IncludeSeed = "True"
+s:Sc/Phsp/IfOutputFileAlreadyExists   = "Overwrite"
+
+# View 
+#s:Gr/ViewA/Type                            = "OpenGL"
+i:Gr/ViewA/WindowSizeX                      = 900
+i:Gr/ViewA/WindowSizeY                      = 900
+d:Gr/ViewA/Theta                            = 55 deg
+d:Gr/ViewA/Phi                              = 20 deg
+s:Gr/ViewA/Projection                       = "Perspective"
+d:Gr/ViewA/PerspectiveAngle                 = 30 deg
+u:Gr/ViewA/Zoom                             = 1.3
+b:Gr/ViewA/HiddenLineRemovalForTrajectories = "True"
+
+# PHYSICS LIST
+s:Ph/ListName         = "Gamma"
+s:Ph/Gamma/Type     = "Geant4_Modular"
+sv:Ph/Gamma/Modules = 1 "g4em-standard_opt3"
+
+
+#Epoxy definition https://www.topepoxy.eu/en/blog/how-to-accurately-calculate-the-amount-of-epoxy-resin/ https://www.azom.com/article.aspx?ArticleID=651 
+
+sv:Ma/Epoxy/Components = 3 "Carbon" "Hydrogen" "Oxygen" # Element names
+uv:Ma/Epoxy/Fractions = 3 0.6667 0.0556 0.2777           # Mass fractions (example: C2H2O)
+d:Ma/Epoxy/Density = 1.2 g/cm3                           # Typical epoxy density
+
+# Source geometry - https://ritverc.com/en/products/reference-and-check-sources-and-solutions/gamma-sources/point-sources
+
+s:Ge/DiskBeamGeo/Parent          = "World"
+s:Ge/DiskBeamGeo/Type            = "TsCylinder"
+s:Ge/DiskBeamGeo/Material        = "Epoxy" # user-defined
+d:Ge/DiskBeamGeo/HL              = 0.5 mm # 1mm total height
+d:Ge/DiskBeamGeo/RMin            = 0.0 mm
+d:Ge/DiskBeamGeo/RMax            = 2 mm # radius 2 mm
+d:Ge/DiskBeamGeo/SPhi            = 0 deg
+d:Ge/DiskBeamGeo/DPhi            = 360 deg
+d:Ge/DiskBeamGeo/TransX          = 0 mm
+d:Ge/DiskBeamGeo/TransY          = 0 mm
+d:Ge/DiskBeamGeo/TransZ          = -1 cm 
+d:Ge/DiskBeamGeo/RotX            = 90 deg
+d:Ge/DiskBeamGeo/RotY            = 0 deg
+d:Ge/DiskBeamGeo/RotZ            = 0 deg
+s:Ge/DiskBeamGeo/Color           = "red"
+s:Ge/DiskBeamGeo/DrawingStyle    = "Solid"
+
+
+s:Ge/DiskCoverGeo/Parent          = "World"
+s:Ge/DiskCoverGeo/Type            = "TsCylinder"
+s:Ge/DiskCoverGeo/Material        = "G4_PLEXIGLASS" # similar to Acrylic
+d:Ge/DiskCoverGeo/HL              = 0.5 mm # 1mm total height
+d:Ge/DiskCoverGeo/RMin            = 2.0 mm
+d:Ge/DiskCoverGeo/RMax            = 25 mm # radius 25 mm
+d:Ge/DiskCoverGeo/SPhi            = 0 deg
+d:Ge/DiskCoverGeo/DPhi            = 360 deg
+d:Ge/DiskCoverGeo/TransX          = 0 mm
+d:Ge/DiskCoverGeo/TransY          = 0 mm
+d:Ge/DiskCoverGeo/TransZ          = -1 cm
+d:Ge/DiskCoverGeo/RotX            = 90 deg
+d:Ge/DiskCoverGeo/RotY            = 0 deg
+d:Ge/DiskCoverGeo/RotZ            = 0 deg
+s:Ge/DiskCoverGeo/Color           = "green"
+s:Ge/DiskCoverGeo/DrawingStyle    = "Solid"
+
+
+s:Ge/BeamGroup/Type    = "Group"
+s:Ge/BeamGroup/Parent = "DiskBeamGeo"
+d:Ge/BeamGroup/RotX   = 0. deg
+d:Ge/BeamGroup/RotY   = 0. deg
+d:Ge/BeamGroup/RotZ   = 0. deg
+d:Ge/BeamGroup/TransY   = -0.5 mm #placed in center of the DiskBeamGeo
+
+# Source - Co-57 
+s:So/source/Type = "Isotropic" 
+s:So/source/Component = "BeamGroup"
+s:So/source/BeamParticle               = "gamma"
+s:So/source/BeamEnergySpectrumType    = "continuous"
+dv:So/source/BeamEnergySpectrumValues  = 2 122 136 keV # https://gammaray.inl.gov/SiteAssets/catalogs/ge/pdf/co57.pdf
+uv:So/source/BeamEnergySpectrumWeights = 2 0.89 0.11
+u:So/source/BeamEnergySpread           = 0 # Cd-109 has two main peaks, although 122 kev is about 8 times more abundant
+ic:So/source/NumberOfHistoriesInRun    = 100000
+
+#b:Ts/PauseBeforeQuit = "True"
