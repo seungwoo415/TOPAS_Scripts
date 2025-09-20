@@ -1,0 +1,9 @@
+# TOPAS Version: 4.0
+# Parameter File: intrinsic_efficiency.txt
+# Results for scorer: EScorer
+# Filtered by: OnlyIncludeParticlesOfGeneration = "Primary"
+# Scored in component: DepletionDepth
+# EnergyDeposit ( MeV ) : Count_in_Bin   
+# Binned by energy deosited in step in 1 bins of 0.5 MeV from 0 MeV to 0.5 MeV
+# First bin is underflow, last bin is overflow.
+0, 4, 0
